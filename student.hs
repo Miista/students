@@ -4,19 +4,22 @@ type Teacher = (Int, String)
 data GroupState = Active | Inactive deriving (Show)
 data Group = SimpleGroup [Student] (Maybe Teacher) | EmptyGroup deriving (Eq, Show)
 
+-- Getter for SimpleGroup students
+getStudents :: Group -> [Student]
+getStudents (SimpleGroup students _) = students
+getStudents EmptyGroup = []
+
+-- Getter for SimpleGroup teacher
+getTeacher :: Group -> Maybe Teacher
+getTeacher (SimpleGroup _ teacher) = teacher
+getTeacher EmptyGroup = Nothing
+
 mkGroup :: Group
 mkGroup = SimpleGroup (mkStudents ["Hans", "Henning", "Flemming"]) (Just (1, "Tina"))
 
 mkStudents :: [String] -> [Student]
 mkStudents names = zip [1..] names
 
-getStudents :: Group -> [Student]
-getStudents (SimpleGroup students _) = students
-getStudents EmptyGroup = []
-
-getTeacher :: Group -> Maybe Teacher
-getTeacher (SimpleGroup _ teacher) = teacher
-getTeacher EmptyGroup = Nothing
 
 hasTeacher :: Group -> Bool
 hasTeacher (SimpleGroup _ Nothing) = False
@@ -37,7 +40,7 @@ addStudentsByName studentsToAdd group =
   in SimpleGroup allStudents teacher
 
 addStudent :: Student -> Group -> Group
-addStudent newStudent group@(SimpleGroup students teacher) =
+addStudent newStudent (SimpleGroup students teacher) =
   let newStudents = if length students < 6
                       then newStudent:students
                       else students
