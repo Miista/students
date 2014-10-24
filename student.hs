@@ -14,6 +14,8 @@ getTeacher :: Group -> Maybe Teacher
 getTeacher (SimpleGroup _ teacher) = teacher
 getTeacher EmptyGroup = Nothing
 
+
+-- Makers
 mkGroup :: Group
 mkGroup = SimpleGroup (mkStudents ["Hans", "Henning", "Flemming"]) (Just (1, "Tina"))
 
@@ -26,6 +28,7 @@ hasTeacher (SimpleGroup _ Nothing) = False
 hasTeacher EmptyGroup = False
 hasTeacher _ = True
 
+-- |Returns whether the group is active or inactive.
 getState :: Group -> GroupState
 getState (SimpleGroup students _) = if length students < 3 then Inactive else Active
 
