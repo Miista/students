@@ -32,6 +32,16 @@ hasTeacher _ = True
 getState :: Group -> GroupState
 getState (SimpleGroup students _) = if length students < 3 then Inactive else Active
 
+addStudents :: [Student] -> Group -> Group
+addStudents studentsToAdd group =
+  let studentsInGroup = getStudents group
+      teacher = getTeacher group
+      allStudents = foldl fn studentsInGroup studentsToAdd
+      fn acc val = if length acc >= 6 -- If we have exactly 6 students in a group, don't add anymore
+                    then acc
+                    else val:acc
+  in SimpleGroup allStudents teacher
+
 addStudentsByName :: [String] -> Group -> Group
 addStudentsByName studentsToAdd group = 
   let studentsInGroup = getStudents group
