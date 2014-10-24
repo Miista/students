@@ -1,3 +1,6 @@
+import Data.List
+import Data.Maybe
+
 type Student = (Int, String)
 type Teacher = (Int, String)
 
@@ -6,14 +9,13 @@ data Group = SimpleGroup [Student] (Maybe Teacher) | EmptyGroup deriving (Eq, Sh
 
 -- Getter for SimpleGroup students
 getStudents :: Group -> [Student]
-getStudents (SimpleGroup students _) = students
 getStudents EmptyGroup = []
+getStudents (SimpleGroup students _) = students
 
 -- Getter for SimpleGroup teacher
 getTeacher :: Group -> Maybe Teacher
-getTeacher (SimpleGroup _ teacher) = teacher
 getTeacher EmptyGroup = Nothing
-
+getTeacher (SimpleGroup _ teacher) = teacher
 
 -- Makers
 mkGroup :: Group
@@ -22,10 +24,9 @@ mkGroup = SimpleGroup (mkStudents ["Hans", "Henning", "Flemming"]) (Just (1, "Ti
 mkStudents :: [String] -> [Student]
 mkStudents names = zip [1..] names
 
-
 hasTeacher :: Group -> Bool
-hasTeacher (SimpleGroup _ Nothing) = False
 hasTeacher EmptyGroup = False
+hasTeacher (SimpleGroup _ Nothing) = False
 hasTeacher _ = True
 
 -- |Returns whether the group is active or inactive.
@@ -53,6 +54,7 @@ addStudentsByName studentsToAdd group =
   in SimpleGroup allStudents teacher
 
 addStudent :: Student -> Group -> Group
+addStudent student EmptyGroup = SimpleGroup [student] Nothing
 addStudent newStudent (SimpleGroup students teacher) =
   let newStudents = if length students < 6
                       then newStudent:students
@@ -75,5 +77,5 @@ addTeacher teacher group =
     else Left "The group is already assigned a teacher!"
 
 removeTeacher :: Group -> Group
-removeTeacher (SimpleGroup students _) = SimpleGroup students Nothing
 removeTeacher EmptyGroup = EmptyGroup
+removeTeacher (SimpleGroup students _) = SimpleGroup students Nothing
