@@ -58,13 +58,15 @@ addStudent newStudent (SimpleGroup students teacher) =
                       then newStudent:students
                       else students
   in SimpleGroup newStudents teacher
-addStudent student EmptyGroup = SimpleGroup [student] Nothing
+
+removeStudentById :: Int -> Group -> Group
+removeStudentById _ EmptyGroup = EmptyGroup
+removeStudentById studentId (SimpleGroup students teacher) =
+  let updatedStudents = filter (\st -> fst st /= studentId) students
+  in SimpleGroup updatedStudents teacher
 
 removeStudent :: Student -> Group -> Group
-removeStudent student (SimpleGroup students teacher) =
-  let newStudents = filter (\st -> st /= student) students
-  in (SimpleGroup newStudents teacher)
-removeStudent student EmptyGroup = EmptyGroup
+removeStudent student = removeStudentById (fst student)
 
 addTeacher :: Teacher -> Group -> Either String Group
 addTeacher teacher group =
